@@ -17,7 +17,7 @@ def main():
     # Define last count value for original pictures
     count = len(os.listdir(save_path)) + 1
     if count > 1:
-        maxid = max([int(re.search("_[0-9]+", i).group()[1:]) for i in os.listdir(save_path)])
+        maxid = max([int(re.findall("[0-9]+", i)[1]) for i in os.listdir(save_path)])
     else:
         maxid = 1
 
