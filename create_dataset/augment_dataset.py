@@ -69,7 +69,7 @@ def shear(img):
 
 def brightness(img):
     img = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
-    random_bright = .75 + np.random.uniform()
+    random_bright = .5 + np.random.uniform()/2
     img[:, :, 2] = img[:, :, 2] * random_bright
     img = cv2.cvtColor(img, cv2.COLOR_HSV2RGB)
     return img
@@ -77,7 +77,7 @@ def brightness(img):
 
 def main():
     classes = [0, 1, 2, 3, 4, 5]
-    nb_images_to_generate_per_class = 50
+    nb_images_to_generate_per_class = 100
     final_size = (200, 200)
 
     orig_path = '../data/originals/'
