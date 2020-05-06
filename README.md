@@ -38,19 +38,19 @@ Available transformations are: rotate, shift x and y, zoom in, add noise, shear,
 
 It outputs n images per class (where n is a parameter) in the data/augmented folder.
 
+In our case, I generated from the 577 original images 12000 augmented images (2000 per class)
+
 ## ML classifiers: SGD / KNN / SVC / RandomForest...
 
+One approach would be to consider the problem as a standard classification problem. Input image (100*100) is flattened into a vector (10000), then we can apply classical ML techniques.
 
+In order to reduce dimensionality of the problem and reduce training time, I applied a PCA preserving 99% of the variance. After PCA dimension is reduced to 360. 
 
+Using for example Random Forest algorithm, after some finetuning we are able to achieve 86% of accuracy on test set. We will see later on how it works on new real data directly from the webcam.
 
+Confusion matrix show 
 
-## Multi Layer Perceptron (using sickit-learn)
-
-
-
-
-
-## MLP (using Keras-TensorFlow)
+## Fully connected Neural Network
 
 
 

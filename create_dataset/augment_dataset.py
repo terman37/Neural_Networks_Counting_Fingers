@@ -77,7 +77,7 @@ def brightness(img):
 
 def main():
     classes = [0, 1, 2, 3, 4, 5]
-    nb_images_to_generate_per_class = 1500
+    nb_images_to_generate_per_class = 2000
     final_size = (100, 100)
 
     orig_path = '../data/originals/'
