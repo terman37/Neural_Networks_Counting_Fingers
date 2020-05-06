@@ -13,7 +13,7 @@ def main():
     x, y, w, h = 400, 150, 200, 200
     wfinal, hfinal = 100, 100
     key = 0
-    model_path = '../training'
+    model_path = '../models'
 
     # Load saved models
     os.environ["CUDA_VISIBLE_DEVICES"] = "2"
