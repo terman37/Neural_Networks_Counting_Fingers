@@ -26,9 +26,17 @@ Images name are 2_original_123.png where the first digit is the class (number of
 
 <img src="capture_images.png" alt="capture_images" style="zoom:50%;" />
 
-The idea was to work with few images, but still needing some variety. I captured 200 pictures for each number using 4 different people... (my sons, my wife and I :-) )
+The idea was to work with few images, but still needing some variety. I captured 577 pictures for all numbers using 4 different people... (my sons, my wife and I :-) )
 
-Some data augmentation will be done afterwards.
+## Data Augmentation
+
+As the number of pictures is small, I decided to do some data augmentation.
+
+Script can be found [here](create_dataset/augment_dataset.py). It applies randomly one or more transformations to images among originals.
+
+Available transformations are: rotate, shift x and y, zoom in, add noise, shear, change brightness.
+
+It outputs n images per class (where n is a parameter) in the data/augmented folder.
 
 ## ML classifiers: SGD / KNN / SVC / RandomForest...
 
