@@ -24,7 +24,7 @@ Images are captured from webcam stream in png format (size: 200x200px)
 
 Images name are 2_original_123.png where the first digit is the class (number of finger shown on the picture) and the last number is a unique id to not overwrite pictures.
 
-<img src="capture_images.png" alt="capture_images" style="zoom:50%;" />
+<img src="pictures/capture_images.png" alt="capture_images" style="zoom:50%;" />
 
 The idea was to work with few images, but still needing some variety. I captured 577 pictures for all numbers using 4 different people... (my sons, my wife and I :-) )
 
@@ -50,7 +50,7 @@ Using for example Random Forest algorithm, after some finetuning we are able to 
 
 Confusion matrix show relatively spread errors:
 
-<img src="ml_confusion_matr.png" alt="ml_confusion_matr" style="zoom:67%;" />
+<img src="pictures/ml_confusion_matr.png" alt="ml_confusion_matr" style="zoom:67%;" />
 
 [notebook](training/ml_classifier_training.ipynb)
 
@@ -58,11 +58,11 @@ Confusion matrix show relatively spread errors:
 
 For the fun, I have tried to classify using a neural network using only fully connected layers.
 
-<img src="fc_model.png" alt="fc_model" style="zoom: 50%;" />
+<img src="pictures/fc_model.png" alt="fc_model" style="zoom: 50%;" />
 
 Even with quite big number of neurons, I have not been able to increase accuracy...
 
-<img src="fc_loss_accuracy.png" alt="fc_loss_accuracy" style="zoom:50%;" />
+<img src="pictures/fc_loss_accuracy.png" alt="fc_loss_accuracy" style="zoom:50%;" />
 
 [notebook](training/fc_training.ipynb)
 
@@ -70,17 +70,17 @@ Even with quite big number of neurons, I have not been able to increase accuracy
 
 Here we should be in the perfect tool to work on images... I have used classical sequential architecture:
 
-<img src="cnn_model.png" alt="cnn_model" style="zoom:50%;" />
+<img src="pictures/cnn_model.png" alt="cnn_model" style="zoom:50%;" />
 
 Using a batch size of 64, after only 12 epochs the model achieves 97% of accuracy on test set. I used early stopping based on the minimal validation accuracy to avoid overfitting.
 
 Evolution of loss and accuracy looks good and show a converging model:
 
-<img src="cnn_loss_accuracy.png" alt="cnn_loss_accuracy" style="zoom:67%;" />
+<img src="pictures/cnn_loss_accuracy.png" alt="cnn_loss_accuracy" style="zoom:67%;" />
 
 Confusion matrix is also nice:
 
-<img src="cnn_confusion_matr.png" alt="cnn_confusion_matr" style="zoom:67%;" />
+<img src="pictures/cnn_confusion_matr.png" alt="cnn_confusion_matr" style="zoom:67%;" />
 
 [notebook](training/cnn_training.ipynb)
 
