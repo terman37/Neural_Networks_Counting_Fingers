@@ -40,26 +40,54 @@ It outputs n images per class (where n is a parameter) in the data/augmented fol
 
 In our case, I generated from the 577 original images 12000 augmented images (2000 per class)
 
-## ML classifiers: SGD / KNN / SVC / RandomForest...
+## ML classifiers: SGD / KNN / SVC / Random Forest...
 
 One approach would be to consider the problem as a standard classification problem. Input image (100*100) is flattened into a vector (10000), then we can apply classical ML techniques.
 
-In order to reduce dimensionality of the problem and reduce training time, I applied a PCA preserving 99% of the variance. After PCA dimension is reduced to 360. 
+In order to reduce dimensionality of the problem and reduce training time, I applied a PCA preserving 99% of the variance. After PCA dimension is reduced to 370. 
 
-Using for example Random Forest algorithm, after some finetuning we are able to achieve 86% of accuracy on test set. We will see later on how it works on new real data directly from the webcam.
+Using for example Random Forest algorithm, after some finetuning we are able to achieve 88% of accuracy on test set. We will see later on how it works on new real data directly from the webcam.
 
-Confusion matrix show 
+Confusion matrix show relatively spread errors:
+
+<img src="ml_confusion_matr.png" alt="ml_confusion_matr" style="zoom:67%;" />
+
+[notebook](training/ml_classifier_training.ipynb)
 
 ## Fully connected Neural Network
 
+For the fun, I have tried to classify using a neural network using only fully connected layers.
 
+<img src="fc_model.png" alt="fc_model" style="zoom: 50%;" />
 
+Even with quite big number of neurons, I have not been able to increase accuracy...
 
+<img src="fc_loss_accuracy.png" alt="fc_loss_accuracy" style="zoom:50%;" />
+
+[notebook](training/fc_training.ipynb)
 
 ## Convolutional Neural Networks
 
+Here we should be in the perfect tool to work on images... I have used classical sequential architecture:
 
+<img src="cnn_model.png" alt="cnn_model" style="zoom:50%;" />
 
+Using a batch size of 64, after only 12 epochs the model achieves 97% of accuracy on test set. I used early stopping based on the minimal validation accuracy to avoid overfitting.
 
+Evolution of loss and accuracy looks good and show a converging model:
+
+<img src="cnn_loss_accuracy.png" alt="cnn_loss_accuracy" style="zoom:67%;" />
+
+Confusion matrix is also nice:
+
+<img src="cnn_confusion_matr.png" alt="cnn_confusion_matr" style="zoom:67%;" />
+
+[notebook](training/cnn_training.ipynb)
 
 ## Using pre-trained Networks (VGG16)
+
+
+
+
+
+## Live predictions
