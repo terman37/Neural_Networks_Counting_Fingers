@@ -1,9 +1,8 @@
 import os
 import random
 import cv2
-import re
 import numpy as np
-
+import shutil
 
 def rotate(img):
     h, w, l = img.shape
@@ -74,7 +73,7 @@ def brightness(img):
     return img
 
 
-def augment_list(im_list, nb_per_class, in_folder, out_folder, f_size, max_id):
+def augment_list(im_list, nb_per_class, in_folder, out_folder, f_size, max_id, cl):
     available_transformations = {'rotate': rotate,
                                  'shift x and y': shift,
                                  'zoom in and crop': zoomin,
@@ -102,8 +101,10 @@ def augment_list(im_list, nb_per_class, in_folder, out_folder, f_size, max_id):
         img = cv2.resize(img, f_size)
 
         # Save new image
+        if not os.path.exists(os.path.join(out_folder, str(cl))):
+            os.mkdir(os.path.join(out_folder, str(cl)))
         new_file_name = "from_%s_%d%s" % (fname, max_id, ext)
-        cv2.imwrite(os.path.join(out_folder, new_file_name), img)
+        cv2.imwrite(os.path.join(out_folder, str(cl), new_file_name), img)
         max_id += 1
 
     return max_id
@@ -115,20 +116,23 @@ def main():
     final_size = (100, 100)
 
     orig_path = '../data/originals/'
-    dest_path = '../data/augmented/'
+    dest_path = '../data/train/'
     dest_test_path = '../data/test/'
-    available_transformations = {'rotate': rotate,
-                                 'shift x and y': shift,
-                                 'zoom in and crop': zoomin,
-                                 'add noise': noise,
-                                 'blur': blur,
-                                 'shear': shear,
-                                 'brightness': brightness}
+    dest_val_path = '../data/val/'
 
-    if len(os.listdir(dest_path)) > 0:
-        maxid = max([int(re.findall("[0-9]+", i)[2]) for i in os.listdir(dest_path)])
-    else:
-        maxid = 1
+    if os.path.exists(dest_path):
+        shutil.rmtree(dest_path)
+    if os.path.exists(dest_test_path):
+        shutil.rmtree(dest_test_path)
+    if os.path.exists(dest_val_path):
+        shutil.rmtree(dest_val_path)
+
+    os.mkdir(dest_path)
+    os.mkdir(dest_test_path)
+    os.mkdir(dest_val_path)
+
+    maxid = 1
+
     images_list = os.listdir(orig_path)
 
     for c in classes:
@@ -144,47 +148,29 @@ def main():
                              in_folder=orig_path,
                              out_folder=dest_test_path,
                              f_size=final_size,
-                             max_id=maxid)
+                             max_id=maxid,
+                             cl=c)
+
+        # keep 15% of originals as images for validation
+        nval = round(len(full_images_list_class[ntest:]) * 0.15)
+
+        # augment val dataset
+        maxid = augment_list(full_images_list_class[ntest:ntest + nval],
+                             nb_per_class=int(nb_images_to_generate_per_class * 0.15),
+                             in_folder=orig_path,
+                             out_folder=dest_val_path,
+                             f_size=final_size,
+                             max_id=maxid,
+                             cl=c)
 
         # augment train dataset
-        maxid = augment_list(full_images_list_class[ntest:],
+        maxid = augment_list(full_images_list_class[ntest + nval:],
                              nb_per_class=nb_images_to_generate_per_class,
                              in_folder=orig_path,
                              out_folder=dest_path,
                              f_size=final_size,
-                             max_id=maxid)
-
-        # test_images_list_class = full_images_list_class[:ntest]
-        # for im in test_images_list_class:
-        #     img = cv2.imread(os.path.join(orig_path, im))
-        #     img = cv2.resize(img, final_size)
-        #     cv2.imwrite(os.path.join(dest_test_path, 'from_%s' % im), img)
-        #
-        # # Train images to be augmented
-        # images_list_class = full_images_list_class[ntest:]
-
-        # for nb in range(0, nb_images_to_generate_per_class):
-        #
-        #     # Select a random image
-        #     image_file = random.choice(images_list_class)
-        #     fname, ext = os.path.splitext(image_file)
-        #     image = cv2.imread(os.path.join(orig_path, image_file))
-        #
-        #     # Define nb of transformation to apply
-        #     nb_transform = random.randint(1, len(available_transformations))
-        #
-        #     # Apply random transform
-        #     for t in range(0, nb_transform):
-        #         t_select = random.choice(list(available_transformations))
-        #         img = available_transformations[t_select](image)
-        #
-        #     # Resize img
-        #     img = cv2.resize(img, final_size)
-        #
-        #     # Save new image
-        #     new_file_name = "from_%s_%d%s" % (fname, maxid, ext)
-        #     cv2.imwrite(os.path.join(dest_path, new_file_name), img)
-        #     maxid += 1
+                             max_id=maxid,
+                             cl=c)
 
 
 if __name__ == "__main__":
