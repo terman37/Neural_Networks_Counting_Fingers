@@ -38,11 +38,12 @@ Available transformations are: rotate, shift x and y, zoom in, add noise, shear,
 
 It outputs n images per class (where n is a parameter) in the data/augmented folder.
 
-In our case, I generated from the 577 original images :
+In our case, I generated from the original images :
 
-- I kept 15% of each class as test set (57images)
-
+- I kept 20% of each class as test set
+- It used 15% of remaining images as validation set
 - 12000 augmented images (2000 per class) from the remaining.
+- it creates the folder structure.
 
 ## ML classifiers: SGD / KNN / SVC / Random Forest...
 
