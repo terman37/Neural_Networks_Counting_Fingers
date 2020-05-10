@@ -5,7 +5,7 @@ import numpy as np
 import shutil
 
 def rotate(img):
-    h, w, l = img.shape
+    h, w = img.shape
     bounds = [-30, 30]  # bounds for the rotation angle in degrees
     r = random.randint(bounds[0], bounds[1])
     rmatr = cv2.getRotationMatrix2D(center=(w // 2, h // 2), angle=r, scale=1)
@@ -14,7 +14,7 @@ def rotate(img):
 
 
 def shift(img):
-    h, w, l = img.shape
+    h, w = img.shape
     bounds = [-25, 25]  # bounds for the shift in x and y in pixels
     sx = random.randint(bounds[0], bounds[1])
     sy = random.randint(bounds[0], bounds[1])
@@ -24,7 +24,7 @@ def shift(img):
 
 
 def zoomin(img):
-    h, w, l = img.shape
+    h, w = img.shape
     bounds = [0, 25]  # bounds for the zoom factor in %
     zx = 1 + random.randint(bounds[0], bounds[1]) / 100
     zy = 1 + random.randint(bounds[0], bounds[1]) / 100
@@ -36,11 +36,10 @@ def zoomin(img):
 
 
 def noise(img):
-    h, w, l = img.shape
+    h, w = img.shape
     bounds = [0.1, 0.75]
     s2 = random.uniform(bounds[0], bounds[1])
     gauss = np.random.normal(0, s2, img.shape).astype('uint8')
-    # gauss = gauss.reshape(h, w, l ).astype('uint8')
     # Add the Gaussian noise to the image
     img = cv2.add(img, gauss)
     return img
@@ -54,7 +53,7 @@ def blur(img):
 
 
 def shear(img):
-    h, w, l = img.shape
+    h, w = img.shape
     shear_range = 25
     pts1 = np.float32([[5, 5], [100, 5], [5, 100]])
     pt1 = 5 + shear_range * np.random.uniform() - shear_range / 2
@@ -65,29 +64,22 @@ def shear(img):
     return img
 
 
-def brightness(img):
-    img = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
-    random_bright = .25 + np.random.uniform(0, 0.75)
-    img[:, :, 2] = img[:, :, 2] * random_bright
-    img = cv2.cvtColor(img, cv2.COLOR_HSV2RGB)
-    return img
-
-
 def augment_list(im_list, nb_per_class, in_folder, out_folder, f_size, max_id, cl):
+
     available_transformations = {'rotate': rotate,
                                  'shift x and y': shift,
                                  'zoom in and crop': zoomin,
                                  'add noise': noise,
                                  'blur': blur,
                                  'shear': shear,
-                                 'brightness': brightness}
+                                 }
 
     for nb in range(0, nb_per_class):
 
         # Select a random image
         image_file = random.choice(im_list)
         fname, ext = os.path.splitext(image_file)
-        image = cv2.imread(os.path.join(in_folder, image_file))
+        image = cv2.imread(os.path.join(in_folder, image_file), cv2.IMREAD_GRAYSCALE)
 
         # Define nb of transformation to apply
         nb_transform = random.randint(1, len(available_transformations))
@@ -112,7 +104,7 @@ def augment_list(im_list, nb_per_class, in_folder, out_folder, f_size, max_id, c
 
 def main():
     classes = [0, 1, 2, 3, 4, 5]
-    nb_images_to_generate_per_class = 1500
+    nb_images_to_generate_per_class = 1000
     final_size = (100, 100)
 
     orig_path = '../data/originals/'
