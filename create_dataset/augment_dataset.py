@@ -69,7 +69,7 @@ def augment_list(im_list, nb_per_class, in_folder, out_folder, f_size, max_id, c
     available_transformations = {'rotate': rotate,
                                  'shift x and y': shift,
                                  'zoom in and crop': zoomin,
-                                 'add noise': noise,
+                                 # 'add noise': noise,
                                  'blur': blur,
                                  'shear': shear,
                                  }
