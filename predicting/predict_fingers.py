@@ -38,12 +38,12 @@ def main():
         # Image to predict
         to_predict = cv2.resize(roi, (wfinal, hfinal))
         to_predict = cv2.cvtColor(to_predict, cv2.COLOR_BGR2GRAY)
-        to_predict = to_predict / 255.
 
         key = cv2.waitKey(5) & 0xff
 
         # predict using ml
-        myimg = to_predict.reshape(1, wfinal * hfinal)
+        myimg = to_predict / 255.
+        myimg = myimg.reshape(1, wfinal * hfinal)
         myimg_pca = pca_model.transform(myimg)
         result = ml_model.predict(myimg_pca)
         pred = result[0]
