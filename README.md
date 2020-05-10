@@ -26,7 +26,7 @@ Images name are 2_original_123.png where the first digit is the class (number of
 
 <img src="pictures/capture_images.png" alt="capture_images" style="zoom:50%;" />
 
-The idea was to work with few images, but still needing some variety. I captured 577 pictures for all numbers using 4 different people... (my sons, my wife and I :-) )
+The idea was to work with few images, but still needing some variety. I captured 600 pictures for all numbers  (100 for each)
 
 ## Data Augmentation
 
@@ -34,28 +34,28 @@ As the number of pictures is small, I decided to do some data augmentation.
 
 Script can be found [here](create_dataset/augment_dataset.py). It applies randomly one or more transformations to images among originals.
 
-Available transformations are: rotate, shift x and y, zoom in, add noise, shear, change brightness.
+Available transformations are: rotate, shift x and y, zoom in, shear.
 
 It outputs n images per class (where n is a parameter) in the data/augmented folder.
 
 In our case, I generated from the original images :
 
-- I kept 20% of each class as test set
-- It used 15% of remaining images as validation set
-- 12000 augmented images (2000 per class) from the remaining.
+- I kept 20% of each class as test set - 120 images augmented to 1200.
+- It used 15% of remaining images as validation set - 90 images augmented to 900.
+- 6000 augmented images (1000 per class) from the remaining 
 - it creates the folder structure.
 
 ## ML classifiers: SGD / KNN / SVC / Random Forest...
 
 One approach would be to consider the problem as a standard classification problem. Input image (100*100) is flattened into a vector (10000), then we can apply classical ML techniques.
 
-In order to reduce dimensionality of the problem and reduce training time, I applied a PCA preserving 99% of the variance. After PCA dimension is reduced to 370. 
+In order to reduce dimensionality of the problem and reduce training time, I applied a PCA preserving 99% of the variance. After PCA dimension is reduced to 800. 
 
-Using for example Random Forest algorithm, after some finetuning we are able to achieve 88% of accuracy on test set. We will see later on how it works on new real data directly from the webcam.
+Using for example Random Forest algorithm, after some finetuning we are able to achieve 84% of accuracy on test set. We will see later on how it works on new real data directly from the webcam.
 
 Confusion matrix show relatively spread errors:
 
-<img src="pictures/ml_confusion_matr.png" alt="ml_confusion_matr" style="zoom:67%;" />
+<img src="pictures/ml_confusion_matr.png" alt="ml_confusion_matr" style="zoom:67%;" /> <img src="pictures/ml_confusion_matr2.png" alt="ml_confusion_matr2" style="zoom:67%;" /> 
 
 [notebook](training/ml_classifier_training.ipynb)
 
@@ -65,7 +65,7 @@ For the fun, I have tried to classify using a neural network using only fully co
 
 <img src="pictures/fc_model.png" alt="fc_model" style="zoom: 50%;" />
 
-Even with quite big number of neurons, I have not been able to increase accuracy...
+Even with quite big number of neurons, I have not been able to increase accuracy... above 16% (which is equivalent to pure random 1/6)
 
 <img src="pictures/fc_loss_accuracy.png" alt="fc_loss_accuracy" style="zoom:50%;" />
 
@@ -73,26 +73,40 @@ Even with quite big number of neurons, I have not been able to increase accuracy
 
 ## Convolutional Neural Networks
 
-Here we should be in the perfect tool to work on images... I have used classical sequential architecture:
+Here we should have a better tool to work on images... I have used classical sequential architecture:
 
 <img src="pictures/cnn_model.png" alt="cnn_model" style="zoom:50%;" />
 
-Using a batch size of 64, after only 12 epochs the model achieves 97% of accuracy on test set. I used early stopping based on the minimal validation accuracy to avoid overfitting.
+Using a batch size of 64, after only 15 epochs the model achieves 88% of accuracy on test set. I used early stopping based on the minimal validation accuracy to avoid overfitting.
 
 Evolution of loss and accuracy looks good and show a converging model:
 
 <img src="pictures/cnn_loss_accuracy.png" alt="cnn_loss_accuracy" style="zoom:67%;" />
 
-Confusion matrix is also nice:
+Confusion matrix:
 
-<img src="pictures/cnn_confusion_matr.png" alt="cnn_confusion_matr" style="zoom:67%;" />
+<img src="pictures/cnn_confusion_matr.png" alt="cnn_confusion_matr" style="zoom:67%;" /><img src="pictures/cnn_confusion_matr2.png" alt="cnn_confusion_matr2" style="zoom:67%;" />
 
 [notebook](training/cnn_training.ipynb)
 
-## Using pre-trained Networks (VGG16)
+## CNN pre-processing the image
+
+Exactly same model, but this time using a bit of preprocessing with OpenCV on the image to show only the shape.
+
+<img src="pictures/before_preprocess.png" alt="before_preprocess" style="zoom: 67%;" /><img src="pictures/after_preprocess.png" alt="after_preprocess" style="zoom:67%;" />
+
+We can see now even better behavior of our CNN. We are able to achieve 93% accuracy on test set.
+
+<img src="pictures/cnn_preproc_loss_accuracy.png" alt="cnn_preproc_loss_accuracy" style="zoom:67%;" />
+
+Confusion matrix:
+
+<img src="pictures/cnn_preproc_confusion_matr.png" alt="cnn_preproc_confusion_matr" style="zoom:67%;" /><img src="pictures/cnn_preproc_confusion_matr2.png" alt="cnn_preproc_confusion_matr2" style="zoom:67%;" />
 
 
 
+## VGG16
 
+retry vgg16 with preprocess image.
 
 ## Live predictions

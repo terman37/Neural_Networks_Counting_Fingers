@@ -35,16 +35,6 @@ def zoomin(img):
     return img
 
 
-def noise(img):
-    h, w = img.shape
-    bounds = [0.1, 0.75]
-    s2 = random.uniform(bounds[0], bounds[1])
-    gauss = np.random.normal(0, s2, img.shape).astype('uint8')
-    # Add the Gaussian noise to the image
-    img = cv2.add(img, gauss)
-    return img
-
-
 def blur(img):
     bounds = [1, 5]  # bounds for the kernel size
     k = random.randint(bounds[0], bounds[1]) * 2 + 1
@@ -69,7 +59,6 @@ def augment_list(im_list, nb_per_class, in_folder, out_folder, f_size, max_id, c
     available_transformations = {'rotate': rotate,
                                  'shift x and y': shift,
                                  'zoom in and crop': zoomin,
-                                 # 'add noise': noise,
                                  'blur': blur,
                                  'shear': shear,
                                  }
