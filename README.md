@@ -4,7 +4,9 @@
 
 Python 3.6
 
-Pandas / OpenCV / sickit-learn / Keras(TensorFlow) see requirements.txt
+Pandas / OpenCV / Sickit-Learn / Keras (TensorFlow) 
+
+See requirements.txt
 
 ## Introduction:
 
@@ -51,7 +53,7 @@ One approach would be to consider the problem as a standard classification probl
 
 In order to reduce dimensionality of the problem and reduce training time, I applied a PCA preserving 99% of the variance. After PCA dimension is reduced to 800. 
 
-Using for example Random Forest algorithm, after some finetuning we are able to achieve 84% of accuracy on test set. We will see later on how it works on new real data directly from the webcam.
+Using for example K Nearest Neighbors algorithm, after some finetuning we are able to achieve 84% of accuracy on test set. We will see later on how it works on new real data directly from the webcam.
 
 Confusion matrix show relatively spread errors:
 
@@ -63,11 +65,11 @@ Confusion matrix show relatively spread errors:
 
 For the fun, I have tried to classify using a neural network using only fully connected layers.
 
-<img src="pictures/fc_model.png" alt="fc_model" style="zoom: 50%;" />
+<img src="pictures/fc_model.png" alt="fc_model" style="zoom: 67%;" />
 
 Even with quite big number of neurons, I have not been able to increase accuracy... above 16% (which is equivalent to pure random 1/6)
 
-<img src="pictures/fc_loss_accuracy.png" alt="fc_loss_accuracy" style="zoom:50%;" />
+<img src="pictures/fc_loss_accuracy.png" alt="fc_loss_accuracy" style="zoom: 67%;" />
 
 [notebook](training/fc_training.ipynb)
 
@@ -75,7 +77,7 @@ Even with quite big number of neurons, I have not been able to increase accuracy
 
 Here we should have a better tool to work on images... I have used classical sequential architecture:
 
-<img src="pictures/cnn_model.png" alt="cnn_model" style="zoom:50%;" />
+<img src="pictures/cnn_model.png" alt="cnn_model" style="zoom: 67%;" />
 
 Using a batch size of 64, after only 15 epochs the model achieves 88% of accuracy on test set. I used early stopping based on the minimal validation accuracy to avoid overfitting.
 
@@ -86,6 +88,8 @@ Evolution of loss and accuracy looks good and show a converging model:
 Confusion matrix:
 
 <img src="pictures/cnn_confusion_matr.png" alt="cnn_confusion_matr" style="zoom:67%;" /><img src="pictures/cnn_confusion_matr2.png" alt="cnn_confusion_matr2" style="zoom:67%;" />
+
+Most of the errors come from 5 that will be predicted as 4.
 
 [notebook](training/cnn_training.ipynb)
 
@@ -103,10 +107,28 @@ Confusion matrix:
 
 <img src="pictures/cnn_preproc_confusion_matr.png" alt="cnn_preproc_confusion_matr" style="zoom:67%;" /><img src="pictures/cnn_preproc_confusion_matr2.png" alt="cnn_preproc_confusion_matr2" style="zoom:67%;" />
 
+Different errors: here it seems that most frequent one is for 1 predicted as 0.
 
+[notebook](training/cnn_training-with-preprocess.ipynb)
 
 ## VGG16
 
-retry vgg16 with preprocess image.
+Now let's try with a deeper Neural Network, the VGG16 architecture. I removed the top dense layers, to apply a custom one consisting of a dense layer with 1000 neurons and a last one to classify with 6 outputs.
+
+<img src="pictures/vgg16_model.png" alt="vgg16_model" style="zoom: 67%;" />
+
+I didn't use pretrained weights on imagenet, I was not sure if images in grayscale could have a lot in common in terms of training with imagenet colored ones.
+
+Results are still better, I managed to acheive around 98% of accuracy on test set. Of course, model is larger (almost 20 millions parameters (230Mo) vs 3.5 millions (40Mo) in classical CNN architecture.)
+
+<img src="pictures/vgg16_loss_accuracy.png" alt="vgg16_loss_accuracy" style="zoom:67%;" />
+
+Confusion matrix is almost perfect:
+
+<img src="pictures/vgg16_confusion_matr.png" alt="vgg16_confusion_matr" style="zoom:67%;" /><img src="pictures/vgg16_confusion_matr2.png" alt="vgg16_confusion_matr2" style="zoom:67%;" />
+
+[notebook](training/vgg16_training.ipynb)
 
 ## Live predictions
+
+Let's now try on live images from webcam. Code is available [here](predicting/predict_fingers.py).

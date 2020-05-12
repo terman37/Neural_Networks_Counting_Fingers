@@ -4,6 +4,7 @@ import copy
 import os
 import re
 
+
 def main():
     # init variables
     x, y, w, h = 400, 150, 200, 200
@@ -44,13 +45,13 @@ def main():
 
         # select nb of finger for saving
         cv2.putText(window, "Press 0,1,2,3,4,5 to save. (q to quit)", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1,
-                    (255, 0, 0), 1)
-        cv2.putText(window, "nb images: %d" % (count - 1), (400, 460), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1)
+                    (255, 0, 0), 2)
+        cv2.putText(window, "nb images: %d" % (count - 1), (360, 460), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
         keys = {ord('0'): 0, ord('1'): 1, ord('2'): 2, ord('3'): 3, ord('4'): 4, ord('5'): 5}
         if key in keys:
             nb = keys.get(key)
             # save image
-            filename = os.path.join(save_path, '%d_original_%d.png' % (nb, maxid+1))
+            filename = os.path.join(save_path, '%d_original_%d.png' % (nb, maxid + 1))
             cv2.imwrite(filename, roi)
             # last saved image for display
             last_saved = cv2.resize(roi, (100, 100))

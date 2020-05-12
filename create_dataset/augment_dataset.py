@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import shutil
 
+
 def rotate(img):
     h, w = img.shape
     bounds = [-30, 30]  # bounds for the rotation angle in degrees
@@ -49,8 +50,8 @@ def shear(img):
     pt1 = 5 + shear_range * np.random.uniform() - shear_range / 2
     pt2 = 100 + shear_range * np.random.uniform() - shear_range / 2
     pts2 = np.float32([[pt1, 5], [pt2, pt1], [5, pt2]])
-    shear_M = cv2.getAffineTransform(pts1, pts2)
-    img = cv2.warpAffine(img, shear_M, (w, h), borderMode=cv2.BORDER_REPLICATE)
+    shear_m = cv2.getAffineTransform(pts1, pts2)
+    img = cv2.warpAffine(img, shear_m, (w, h), borderMode=cv2.BORDER_REPLICATE)
     return img
 
 
@@ -76,10 +77,10 @@ def augment_list(im_list, nb_per_class, in_folder, out_folder, f_size, max_id, c
         # Apply random transform
         for t in range(0, nb_transform):
             t_select = random.choice(list(available_transformations))
-            img = available_transformations[t_select](image)
+            image = available_transformations[t_select](image)
 
         # Resize img
-        img = cv2.resize(img, f_size)
+        img = cv2.resize(image, f_size)
 
         # Save new image
         if not os.path.exists(os.path.join(out_folder, str(cl))):

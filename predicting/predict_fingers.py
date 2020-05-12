@@ -6,6 +6,7 @@ import pickle
 import numpy as np
 
 from keras.models import load_model
+from keras.applications.vgg16 import preprocess_input as preprocess_input_vgg
 
 
 def main():
@@ -19,8 +20,8 @@ def main():
     # Load saved models
     os.environ["CUDA_VISIBLE_DEVICES"] = "2"
     cnn_model = load_model(os.path.join(model_path, 'model_cnn.h5'))
-
     cnn_preproc_model = load_model(os.path.join(model_path, 'model_cnn_preproc.h5'))
+    vgg16_model = load_model(os.path.join(model_path, 'model_vgg16.h5'))
 
     ml_model = pickle.load(open(os.path.join(model_path, 'model_classic.sav'), 'rb'))
     pca_model = pickle.load(open(os.path.join(model_path, 'model_classic_pca.sav'), 'rb'))
@@ -45,18 +46,18 @@ def main():
         key = cv2.waitKey(5) & 0xff
 
         # predict using ml
-        myimg = to_predict #/ 255.
+        myimg = to_predict
         myimg = myimg.reshape(1, wfinal * hfinal)
         myimg_pca = pca_model.transform(myimg)
         result = ml_model.predict(myimg_pca)
         pred = result[0]
-        cv2.putText(window, "ml model : %d" % pred, (397, 140), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        cv2.putText(window, "ml model : %d" % pred, (400, 140), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2)
 
         # predict using cnn
         myimg = to_predict.reshape(1, hfinal, wfinal, 1)
         myclass = cnn_model.predict(myimg)
         pred = np.argmax(myclass)
-        cv2.putText(window, "cnn model : %d" % pred, (380, 380), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+        cv2.putText(window, "cnn model : %d" % pred, (400, 380), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255, 0, 0), 2)
 
         # predict using cnn with pre processing
         myimg = cv2.GaussianBlur(to_predict, ksize=(1, 1), sigmaX=1000).astype('uint8')
@@ -65,8 +66,16 @@ def main():
         myimg = myimg.reshape(1, hfinal, wfinal, 1)
         myclass = cnn_preproc_model.predict(myimg)
         pred = np.argmax(myclass)
-        cv2.putText(window, "cnn preproc : %d" % pred, (380, 410), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 128, 0), 2)
+        cv2.putText(window, "cnn preproc : %d" % pred, (400, 410), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255, 128, 0), 2)
         window[y2:y2 + h2, x2:x2 + w2] = cv2.cvtColor(myimg.reshape(hfinal, wfinal, 1), cv2.COLOR_GRAY2BGR)
+
+        # predict using vgg16
+        myimg = cv2.cvtColor(to_predict, cv2.COLOR_GRAY2BGR)
+        myimg = myimg.reshape(1, hfinal, wfinal, 3)
+        myimg = preprocess_input_vgg(myimg)
+        myclass = vgg16_model.predict(myimg)
+        pred = np.argmax(myclass)
+        cv2.putText(window, "vgg16 model : %d" % pred, (400, 440), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255, 0, 128), 2)
 
         # Display image
         cv2.imshow('WebCam', window)
