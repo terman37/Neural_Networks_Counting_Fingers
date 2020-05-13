@@ -1,5 +1,7 @@
 # Neural Networks Counting Fingers Project
 
+Available on https://github.com/terman37/Neural_Networks_Counting_Fingers
+
 ## Environment:
 
 Python 3.6
@@ -132,3 +134,18 @@ Confusion matrix is almost perfect:
 ## Live predictions
 
 Let's now try on live images from webcam. Code is available [here](predicting/predict_fingers.py).
+
+Predictions from the different models are displayed on the screen.
+
+<img src="pictures/predict_fingers.gif" alt="predict_fingers" style="zoom:67%;" />
+
+Without surprise, model made with KNN is the less accurate, making a lot of mistake with most of the numbers.
+
+All neural networks are performing better. I would say after playing with it a little bit that CNN with preprocessing and VGG16 are quite close in terms of performance. It remains the point that VGG16 is heavier model (230Mo vs 40Mo for CNN). One would have to choose if model size matter against slightly better accuracy.
+
+Preprocessing technique gives of course better results if background is different. Background still has to be homogenous but predictions made on white background for example will be better with preprocessing than with VGG16. 
+
+Project could still be improved with more preprocessing for example with removing background techniques to make it work in any situation.
+
+Anyway, results are really great and shows power of convolutional neural networks with quite easy implementation.
+

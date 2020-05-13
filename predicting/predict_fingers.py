@@ -66,7 +66,7 @@ def main():
         myimg = myimg.reshape(1, hfinal, wfinal, 1)
         myclass = cnn_preproc_model.predict(myimg)
         pred = np.argmax(myclass)
-        cv2.putText(window, "cnn preproc : %d" % pred, (400, 410), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255, 128, 0), 2)
+        cv2.putText(window, "cnn preproc : %d" % pred, (400, 410), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (128, 255, 0), 2)
         window[y2:y2 + h2, x2:x2 + w2] = cv2.cvtColor(myimg.reshape(hfinal, wfinal, 1), cv2.COLOR_GRAY2BGR)
 
         # predict using vgg16
