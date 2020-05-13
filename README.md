@@ -134,7 +134,7 @@ Confusion matrix is almost perfect:
 
 Let's now try on live images from webcam. Code is available [here](predicting/predict_fingers.py).
 
-Predictions from the different models are displayed on the screen.
+Predictions from the different models are displayed on the screen as shown on this gif.
 
 <img src="pictures/predict_fingers.gif" alt="predict_fingers" style="zoom:67%;" />
 
