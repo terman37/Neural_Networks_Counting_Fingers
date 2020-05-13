@@ -6,7 +6,7 @@ Available on https://github.com/terman37/Neural_Networks_Counting_Fingers
 
 Python 3.6
 
-Pandas / OpenCV / Sickit-Learn / Keras (TensorFlow) 
+Pandas / Numpy / OpenCV / Sickit-Learn / Keras (TensorFlow) 
 
 See requirements.txt
 
@@ -40,14 +40,13 @@ Script can be found [here](create_dataset/augment_dataset.py). It applies random
 
 Available transformations are: rotate, shift x and y, zoom in, shear.
 
-It outputs n images per class (where n is a parameter) in the data/augmented folder.
+It outputs n images per class (where n is a parameter), creates a standard folder structure, and convert images to grayscale 100x100px to speed up calculation.
 
 In our case, I generated from the original images :
 
 - I kept 20% of each class as test set - 120 images augmented to 1200.
 - It used 15% of remaining images as validation set - 90 images augmented to 900.
 - 6000 augmented images (1000 per class) from the remaining 
-- it creates the folder structure.
 
 ## ML classifiers: SGD / KNN / SVC / Random Forest...
 
@@ -55,7 +54,7 @@ One approach would be to consider the problem as a standard classification probl
 
 In order to reduce dimensionality of the problem and reduce training time, I applied a PCA preserving 99% of the variance. After PCA dimension is reduced to 800. 
 
-Using for example K Nearest Neighbors algorithm, after some finetuning we are able to achieve 84% of accuracy on test set. We will see later on how it works on new real data directly from the webcam.
+Using for example K Nearest Neighbors algorithm, after some finetuning we are able to achieve **84%** of accuracy on test set. We will see later on how it works on new real data directly from the webcam.
 
 Confusion matrix show relatively spread errors:
 
@@ -65,7 +64,7 @@ Confusion matrix show relatively spread errors:
 
 ## Fully connected Neural Network
 
-For the fun, I have tried to classify using a neural network using only fully connected layers.
+For the fun, I have tried to classify using a neural network using only fully connected layers. It's not a very good tool to deal with images and after some experiments I can confirm... that i have not been able to achieve something correct.
 
 <img src="pictures/fc_model.png" alt="fc_model" style="zoom: 67%;" />
 
@@ -81,7 +80,7 @@ Here we should have a better tool to work on images... I have used classical seq
 
 <img src="pictures/cnn_model.png" alt="cnn_model" style="zoom: 67%;" />
 
-Using a batch size of 64, after only 15 epochs the model achieves 88% of accuracy on test set. I used early stopping based on the minimal validation accuracy to avoid overfitting.
+Using a batch size of 64, after only 15 epochs the model achieves **88%** of accuracy on test set. I used early stopping based on the minimal validation loss to avoid overfitting.
 
 Evolution of loss and accuracy looks good and show a converging model:
 
@@ -97,11 +96,11 @@ Most of the errors come from 5 that will be predicted as 4.
 
 ## CNN pre-processing the image
 
-Exactly same model, but this time using a bit of preprocessing with OpenCV on the image to show only the shape.
+Exactly same CNN model, but this time using a bit of preprocessing with OpenCV on the image to show only the shape.
 
 <img src="pictures/before_preprocess.png" alt="before_preprocess" style="zoom: 67%;" /><img src="pictures/after_preprocess.png" alt="after_preprocess" style="zoom:67%;" />
 
-We can see now even better behavior of our CNN. We are able to achieve 93% accuracy on test set.
+We can see now even better behavior of our CNN. We are able to achieve **93%** accuracy on test set.
 
 <img src="pictures/cnn_preproc_loss_accuracy.png" alt="cnn_preproc_loss_accuracy" style="zoom:67%;" />
 
@@ -119,9 +118,9 @@ Now let's try with a deeper Neural Network, the VGG16 architecture. I removed th
 
 <img src="pictures/vgg16_model.png" alt="vgg16_model" style="zoom: 67%;" />
 
-I didn't use pretrained weights on imagenet, I was not sure if images in grayscale could have a lot in common in terms of training with imagenet colored ones.
+I didn't use pretrained weights on Imagenet, I was not sure if images in grayscale could have a lot in common in terms of training with Imagenet colored ones.
 
-Results are still better, I managed to acheive around 98% of accuracy on test set. Of course, model is larger (almost 20 millions parameters (230Mo) vs 3.5 millions (40Mo) in classical CNN architecture.)
+Results are still better, I managed to achieve around **98%** of accuracy on test set. Of course, model is larger (almost 20 millions parameters (230Mo) vs 3.5 millions (40Mo) in classical CNN architecture.)
 
 <img src="pictures/vgg16_loss_accuracy.png" alt="vgg16_loss_accuracy" style="zoom:67%;" />
 
@@ -141,7 +140,7 @@ Predictions from the different models are displayed on the screen.
 
 Without surprise, model made with KNN is the less accurate, making a lot of mistake with most of the numbers.
 
-All neural networks are performing better. I would say after playing with it a little bit that CNN with preprocessing and VGG16 are quite close in terms of performance. It remains the point that VGG16 is heavier model (230Mo vs 40Mo for CNN). One would have to choose if model size matter against slightly better accuracy.
+All neural networks are performing better. I would say after playing with it a little bit that CNN with preprocessing and VGG16 are quite close in terms of performance. It remains the point that VGG16 is much heavier model (230Mo vs 40Mo for CNN). One would have to choose if model size matter against slightly better accuracy.
 
 Preprocessing technique gives of course better results if background is different. Background still has to be homogenous but predictions made on white background for example will be better with preprocessing than with VGG16. 
 
